@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c409f55-a87b-4736-9939-6ce1503285ec" name="Changes" comment="API com Front finalizado.">
+    <list default="true" id="6c409f55-a87b-4736-9939-6ce1503285ec" name="Changes" comment="Erro 500 corrijido.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +102,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779834959559</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Erro 500 corrijido.">
+      <option name="closed" value="true" />
+      <created>1779836537331</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1779836537331</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,7 +129,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="API com Front finalizado." />
-    <option name="LAST_COMMIT_MESSAGE" value="API com Front finalizado." />
+    <MESSAGE value="Erro 500 corrijido." />
+    <option name="LAST_COMMIT_MESSAGE" value="Erro 500 corrijido." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

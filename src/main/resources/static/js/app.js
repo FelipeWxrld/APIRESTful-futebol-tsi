@@ -465,32 +465,21 @@ function initCRUDHandlers() {
     });
 
     // ---------------- TIMES ----------------
-    document.getElementById('btn-add-team').addEventListener('click', async () => {
+    document.getElementById('btn-add-team').addEventListener('click', () => {
         document.getElementById('form-team').reset();
         document.getElementById('team-id').value = '';
         document.getElementById('modal-team-title').innerText = 'Cadastrar Novo Time';
-        
-        // Carrega dropdowns
-        await Promise.all([
-            populateLeaguesDropdown('team-league'),
-            populateStadiumsDropdown('team-stadium')
-        ]);
-        
         openModal('modal-team');
     });
     
     document.getElementById('form-team').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('team-id').value;
-        const leagueId = document.getElementById('team-league').value;
-        const stadiumId = document.getElementById('team-stadium').value;
         
         const data = {
             name: document.getElementById('team-name').value,
             city: document.getElementById('team-city').value,
-            state: document.getElementById('team-state').value,
-            league: { id: parseInt(leagueId, 10) },
-            stadium: { id: parseInt(stadiumId, 10) }
+            coach: document.getElementById('team-coach').value
         };
         
         try {
@@ -877,9 +866,7 @@ async function loadTeams() {
                     </div>
                 </td>
                 <td>${t.city}</td>
-                <td>${t.state}</td>
-                <td><span class="badge badge-role-read">${t.league?.name || 'Não associado'}</span></td>
-                <td><i class="fa-solid fa-hotel text-secondary" style="margin-right: 0.35rem;"></i> ${t.stadium?.name || 'Sem mando'}</td>
+                <td><i class="fa-solid fa-user-tie text-secondary" style="margin-right: 0.35rem;"></i> ${t.coach || 'Sem treinador'}</td>
                 <td>
                     <div class="row-actions">
                         <button class="btn btn-secondary btn-icon" onclick="editTeam(${t.id})" title="Editar clube"><i class="fa-solid fa-pen"></i></button>
@@ -921,9 +908,7 @@ async function searchTeams(name) {
                     </div>
                 </td>
                 <td>${t.city}</td>
-                <td>${t.state}</td>
-                <td><span class="badge badge-role-read">${t.league?.name || 'Não associado'}</span></td>
-                <td><i class="fa-solid fa-hotel text-secondary" style="margin-right: 0.35rem;"></i> ${t.stadium?.name || 'Sem mando'}</td>
+                <td><i class="fa-solid fa-user-tie text-secondary" style="margin-right: 0.35rem;"></i> ${t.coach || 'Sem treinador'}</td>
                 <td>
                     <div class="row-actions">
                         <button class="btn btn-secondary btn-icon" onclick="editTeam(${t.id})" title="Editar clube"><i class="fa-solid fa-pen"></i></button>
@@ -943,18 +928,10 @@ async function editTeam(id) {
     try {
         const t = await ApiService.getTeam(id);
         
-        // Garante dropdowns prontos antes de preencher
-        await Promise.all([
-            populateLeaguesDropdown('team-league'),
-            populateStadiumsDropdown('team-stadium')
-        ]);
-        
         document.getElementById('team-id').value = t.id;
         document.getElementById('team-name').value = t.name;
         document.getElementById('team-city').value = t.city;
-        document.getElementById('team-state').value = t.state;
-        document.getElementById('team-league').value = t.league?.id || '';
-        document.getElementById('team-stadium').value = t.stadium?.id || '';
+        document.getElementById('team-coach').value = t.coach || '';
         
         document.getElementById('modal-team-title').innerText = `Editar Clube #${t.id}`;
         openModal('modal-team');

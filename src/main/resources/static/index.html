@@ -218,14 +218,12 @@
                                         <th>ID</th>
                                         <th>Nome</th>
                                         <th>Cidade</th>
-                                        <th>Estado/País</th>
-                                        <th>Liga</th>
-                                        <th>Estádio Principal</th>
+                                        <th>Treinador</th>
                                         <th style="width: 120px;">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="teams-table-body">
-                                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -459,20 +457,8 @@
                             <input type="text" id="team-city" class="form-control" placeholder="Ex: Madrid, Rio de Janeiro" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="team-state">Estado / País Sede</label>
-                            <input type="text" id="team-state" class="form-control" placeholder="Ex: RJ, SP, Espanha" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="team-league">Associação à Liga</label>
-                            <select id="team-league" class="form-control" required>
-                                <option value="">Carregando ligas...</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="team-stadium">Estádio Principal (Mando de Campo)</label>
-                            <select id="team-stadium" class="form-control" required>
-                                <option value="">Carregando estádios...</option>
-                            </select>
+                            <label class="form-label" for="team-coach">Treinador Principal</label>
+                            <input type="text" id="team-coach" class="form-control" placeholder="Ex: Hansi Flick, Pep Guardiola" required>
                         </div>
                     </div>
                 </div>
