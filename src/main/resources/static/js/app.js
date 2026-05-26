@@ -616,7 +616,7 @@ function initCRUDHandlers() {
             name: document.getElementById('stadium-name').value,
             capacity: parseInt(document.getElementById('stadium-capacity').value, 10),
             city: document.getElementById('stadium-city').value,
-            country: document.getElementById('stadium-country').value
+            type: document.getElementById('stadium-type').value
         };
         
         try {
@@ -1132,7 +1132,7 @@ async function loadStadiums() {
                 <td><i class="fa-solid fa-hotel text-primary" style="margin-right: 0.35rem;"></i> ${s.name}</td>
                 <td>${s.capacity.toLocaleString()} torcedores</td>
                 <td>${s.city}</td>
-                <td>${s.country}</td>
+                <td>${s.type}</td>
                 <td>
                     <div class="row-actions">
                         <button class="btn btn-secondary btn-icon" onclick="editStadium(${s.id})" title="Editar estádio"><i class="fa-solid fa-pen"></i></button>
@@ -1170,7 +1170,7 @@ async function searchStadiums(name) {
                 <td><i class="fa-solid fa-hotel text-primary" style="margin-right: 0.35rem;"></i> ${s.name}</td>
                 <td>${s.capacity.toLocaleString()} torcedores</td>
                 <td>${s.city}</td>
-                <td>${s.country}</td>
+                <td>${s.type}</td>
                 <td>
                     <div class="row-actions">
                         <button class="btn btn-secondary btn-icon" onclick="editStadium(${s.id})" title="Editar estádio"><i class="fa-solid fa-pen"></i></button>
@@ -1193,7 +1193,7 @@ async function editStadium(id) {
         document.getElementById('stadium-name').value = s.name;
         document.getElementById('stadium-capacity').value = s.capacity;
         document.getElementById('stadium-city').value = s.city;
-        document.getElementById('stadium-country').value = s.country;
+        document.getElementById('stadium-type').value = s.type;
         
         document.getElementById('modal-stadium-title').innerText = `Editar Estádio #${s.id}`;
         openModal('modal-stadium');
