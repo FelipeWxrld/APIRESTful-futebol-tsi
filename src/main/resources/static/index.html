@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager API | Admin Dashboard</title>
+    <!-- FontAwesome para ícones premium -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Folha de estilos customizada -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar de Navegação -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-circle-nodes brand-icon"></i>
+                <span class="brand-name">FOOTBALL API</span>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-tab="dashboard">
+                        <a href="#section-dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item" data-tab="leagues">
+                        <a href="#section-leagues"><i class="fa-solid fa-trophy"></i> Ligas</a>
+                    </li>
+                    <li class="nav-item" data-tab="teams">
+                        <a href="#section-teams"><i class="fa-solid fa-shield-halved"></i> Times</a>
+                    </li>
+                    <li class="nav-item" data-tab="players">
+                        <a href="#section-players"><i class="fa-solid fa-user-astronaut"></i> Jogadores</a>
+                    </li>
+                    <li class="nav-item" data-tab="stadiums">
+                        <a href="#section-stadiums"><i class="fa-solid fa-landmark-dome"></i> Estádios</a>
+                    </li>
+                    <li class="nav-item" data-tab="matches">
+                        <a href="#section-matches"><i class="fa-solid fa-calendar-days"></i> Partidas</a>
+                    </li>
+                    <li class="nav-item" data-tab="apikeys">
+                        <a href="#section-apikeys"><i class="fa-solid fa-key"></i> Chaves de API</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Status da Chave de API na barra lateral -->
+            <div class="sidebar-footer">
+                <div class="key-status-card">
+                    <div class="key-status-title">
+                        <span>Chave Ativa</span>
+                        <span id="key-role-badge" class="key-status-badge">NENHUMA</span>
+                    </div>
+                    <span id="active-key-display" class="key-status-value">Sem chave ativa...</span>
+                    <button id="btn-clear-key" class="btn btn-secondary btn-icon" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 0.4rem;">
+                        <i class="fa-solid fa-right-from-bracket"></i> Desconectar Chave
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Área Principal de Conteúdo -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="page-title-area">
+                    <h1 id="current-page-title">Dashboard Geral</h1>
+                </div>
+                
+                <!-- Monitor de Rate Limit em Tempo Real -->
+                <div class="api-status-bar">
+                    <div id="rate-limit-metric" class="status-metric">
+                        <span class="metric-dot"></span>
+                        <span>API Rate Limit: <strong id="rate-remaining">15</strong> / <strong id="rate-limit-val">15</strong></span>
+                    </div>
+                    <div id="rate-reset-metric" class="status-metric warning" style="display: none;">
+                        <span class="metric-dot"></span>
+                        <span>Reset em: <strong id="rate-reset-val">0</strong>s</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Corpo Principal com as Seções Dinâmicas -->
+            <div class="content-body">
+
+                <!-- ================== SEÇÃO: DASHBOARD ================== -->
+                <section id="section-dashboard" class="content-section active">
+                    <!-- Banner Herói -->
+                    <div class="dashboard-hero">
+                        <div class="hero-text">
+                            <h2>Controle Completo do Futebol Digital</h2>
+                            <p>Bem-vindo ao painel administrativo da API RESTful de Futebol. Gerencie ligas, times, jogadores, estádios e partidas com uma interface moderna e integração de dados em tempo real.</p>
+                            <button class="btn btn-primary" onclick="document.querySelector('[data-tab=apikeys]').click()">
+                                <i class="fa-solid fa-key"></i> Gerenciar Chaves de API
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid de Métricas Principais -->
+                    <div class="metrics-grid">
+                        <div class="metric-card" onclick="document.querySelector('[data-tab=leagues]').click()" style="cursor: pointer;">
+                            <div class="metric-info">
+                                <span class="metric-label">Ligas Cadastradas</span>
+                                <span id="dash-count-leagues" class="metric-value">...</span>
+                            </div>
+                            <div class="metric-icon-box">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card" onclick="document.querySelector('[data-tab=teams]').click()" style="cursor: pointer;">
+                            <div class="metric-info">
+                                <span class="metric-label">Times Ativos</span>
+                                <span id="dash-count-teams" class="metric-value">...</span>
+                            </div>
+                            <div class="metric-icon-box">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card" onclick="document.querySelector('[data-tab=players]').click()" style="cursor: pointer;">
+                            <div class="metric-info">
+                                <span class="metric-label">Jogadores Registrados</span>
+                                <span id="dash-count-players" class="metric-value">...</span>
+                            </div>
+                            <div class="metric-icon-box">
+                                <i class="fa-solid fa-user-astronaut"></i>
+                            </div>
+                        </div>
+                        <div class="metric-card" onclick="document.querySelector('[data-tab=stadiums]').click()" style="cursor: pointer;">
+                            <div class="metric-info">
+                                <span class="metric-label">Estádios Cadastrados</span>
+                                <span id="dash-count-stadiums" class="metric-value">...</span>
+                            </div>
+                            <div class="metric-icon-box">
+                                <i class="fa-solid fa-landmark-dome"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guia de Inicialização Rápida -->
+                    <div class="data-panel" style="margin-top: 2rem;">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-circle-info text-primary"></i> Primeiros Passos com a API</span>
+                        </div>
+                        <div style="padding: 2rem; line-height: 1.8; color: var(--text-secondary);">
+                            <p style="margin-bottom: 1rem;"><strong class="text-primary">1. Crie uma Chave de API:</strong> Vá até a aba <a href="#section-apikeys" onclick="document.querySelector('[data-tab=apikeys]').click()">Chaves de API</a>, informe seu nome e crie uma chave de acesso (WRITE ou ADMIN para poder cadastrar dados).</p>
+                            <p style="margin-bottom: 1rem;"><strong class="text-primary">2. Defina a Chave Ativa:</strong> Copie a chave gerada e clique em "Usar esta Chave" para que o painel envie ela automaticamente no cabeçalho <code>X-API-Key</code> de todas as chamadas.</p>
+                            <p style="margin-bottom: 1rem;"><strong class="text-primary">3. Cadastre Entidades Relacionadas:</strong> Crie primeiro as <em>Ligas</em> e <em>Estádios</em> antes de criar <em>Times</em>, pois eles precisam dessas associações. Em seguida, cadastre <em>Jogadores</em> associados a times e agende <em>Partidas</em>.</p>
+                            <p><strong class="text-primary">4. Swagger API Docs:</strong> Acesse a documentação Swagger interativa gerada pelo back-end em <a id="swagger-link" href="#" target="_blank" class="text-primary" style="text-decoration: underline;">/swagger-ui.html</a> para testar os endpoints diretamente.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: LIGAS ================== -->
+                <section id="section-leagues" class="content-section">
+                    <div class="data-panel">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-trophy"></i> Ligas Cadastradas</span>
+                            <div class="panel-actions">
+                                <div class="search-box">
+                                    <label for="search-league-input" class="sr-only">Buscar liga por nome</label>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="search-league-input" class="search-input" placeholder="Buscar liga por nome...">
+                                </div>
+                                <button id="btn-add-league" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Nova Liga</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome da Liga</th>
+                                        <th>País</th>
+                                        <th>Nível</th>
+                                        <th style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leagues-table-body">
+                                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        <div class="pagination-area">
+                            <span id="leagues-page-info">Mostrando liga 0-0 de 0</span>
+                            <div class="pagination-controls">
+                                <button id="btn-leagues-prev" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="btn-leagues-next" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: TIMES ================== -->
+                <section id="section-teams" class="content-section">
+                    <div class="data-panel">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-shield-halved"></i> Times Cadastrados</span>
+                            <div class="panel-actions">
+                                <div class="search-box">
+                                    <label for="search-team-input" class="sr-only">Buscar time por nome</label>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="search-team-input" class="search-input" placeholder="Buscar time por nome...">
+                                </div>
+                                <button id="btn-add-team" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Time</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Cidade</th>
+                                        <th>Estado/País</th>
+                                        <th>Liga</th>
+                                        <th>Estádio Principal</th>
+                                        <th style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teams-table-body">
+                                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        <div class="pagination-area">
+                            <span id="teams-page-info">Mostrando time 0-0 de 0</span>
+                            <div class="pagination-controls">
+                                <button id="btn-teams-prev" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="btn-teams-next" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: JOGADORES ================== -->
+                <section id="section-players" class="content-section">
+                    <div class="data-panel">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-user-astronaut"></i> Jogadores Cadastrados</span>
+                            <div class="panel-actions">
+                                <div class="search-box">
+                                    <label for="search-player-input" class="sr-only">Buscar jogador por nome</label>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="search-player-input" class="search-input" placeholder="Buscar jogador por nome...">
+                                </div>
+                                <button id="btn-add-player" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Jogador</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Nº</th>
+                                        <th>Posição</th>
+                                        <th>Idade</th>
+                                        <th>Clube</th>
+                                        <th style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="players-table-body">
+                                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        <div class="pagination-area">
+                            <span id="players-page-info">Mostrando jogador 0-0 de 0</span>
+                            <div class="pagination-controls">
+                                <button id="btn-players-prev" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="btn-players-next" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: ESTÁDIOS ================== -->
+                <section id="section-stadiums" class="content-section">
+                    <div class="data-panel">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-landmark-dome"></i> Estádios Cadastrados</span>
+                            <div class="panel-actions">
+                                <div class="search-box">
+                                    <label for="search-stadium-input" class="sr-only">Buscar estádio por nome</label>
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="search-stadium-input" class="search-input" placeholder="Buscar estádio por nome...">
+                                </div>
+                                <button id="btn-add-stadium" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Estádio</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome do Estádio</th>
+                                        <th>Capacidade</th>
+                                        <th>Cidade</th>
+                                        <th>Tipo de Gramado</th>
+                                        <th style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stadiums-table-body">
+                                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        <div class="pagination-area">
+                            <span id="stadiums-page-info">Mostrando estádio 0-0 de 0</span>
+                            <div class="pagination-controls">
+                                <button id="btn-stadiums-prev" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="btn-stadiums-next" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: PARTIDAS ================== -->
+                <section id="section-matches" class="content-section">
+                    <div class="data-panel">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-calendar-days"></i> Partidas Agendadas</span>
+                            <div class="panel-actions">
+                                <button id="btn-add-match" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Agendar Partida</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="premium-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Mandante</th>
+                                        <th style="text-align: center; width: 80px;">Placar</th>
+                                        <th>Visitante</th>
+                                        <th>Estádio</th>
+                                        <th>Data do Jogo</th>
+                                        <th>Status</th>
+                                        <th style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matches-table-body">
+                                    <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Carregando dados...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        <div class="pagination-area">
+                            <span id="matches-page-info">Mostrando partida 0-0 de 0</span>
+                            <div class="pagination-controls">
+                                <button id="btn-matches-prev" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="btn-matches-next" class="btn btn-secondary btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================== SEÇÃO: CHAVES DE API ================== -->
+                <section id="section-apikeys" class="content-section">
+                    <div class="data-panel" style="margin-bottom: 2rem;">
+                        <div class="panel-header">
+                            <span class="panel-title"><i class="fa-solid fa-key"></i> Gerador de Chaves de API</span>
+                        </div>
+                        <div style="padding: 2rem;">
+                            <form id="form-generate-key" style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-end;">
+                                <div class="form-group" style="flex-grow: 1; min-width: 250px;">
+                                    <label class="form-label" for="key-owner">Nome do Proprietário / Estudante</label>
+                                    <input type="text" id="key-owner" class="form-control" placeholder="Digite seu nome completo..." required>
+                                </div>
+                                <div class="form-group" style="width: 200px;">
+                                    <label class="form-label" for="key-role">Nível de Acesso (Role)</label>
+                                    <select id="key-role" class="form-control">
+                                        <option value="ADMIN">ADMIN (Escrita/Leitura)</option>
+                                        <option value="WRITE" selected>WRITE (Escrita/Leitura)</option>
+                                        <option value="READ">READ (Somente Leitura)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="height: 44px;"><i class="fa-solid fa-gears"></i> Gerar Chave</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <h2 class="panel-title" style="margin-bottom: 1rem;"><i class="fa-solid fa-list-check"></i> Chaves Registradas</h2>
+                    <div id="keys-list-container" class="keys-card-container">
+                        <!-- Chaves geradas virão dinamicamente aqui -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================== MODAL: LIGA (CADASTRAR / EDITAR) ================== -->
+    <div id="modal-league" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-league-title" class="modal-title">Cadastrar Nova Liga</h3>
+                <span class="modal-close" onclick="closeModal('modal-league')">&times;</span>
+            </div>
+            <form id="form-league">
+                <input type="hidden" id="league-id">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="league-name">Nome da Liga</label>
+                            <input type="text" id="league-name" class="form-control" placeholder="Ex: Premier League, Brasileirão Série A" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="league-country">País da Liga</label>
+                            <input type="text" id="league-country" class="form-control" placeholder="Ex: Inglaterra, Brasil" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="league-level">Nível da Liga</label>
+                            <input type="number" id="league-level" class="form-control" placeholder="Ex: 1 (Principal)" min="1" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-league')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Liga</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== MODAL: TIME (CADASTRAR / EDITAR) ================== -->
+    <div id="modal-team" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-team-title" class="modal-title">Cadastrar Novo Time</h3>
+                <span class="modal-close" onclick="closeModal('modal-team')">&times;</span>
+            </div>
+            <form id="form-team">
+                <input type="hidden" id="team-id">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="team-name">Nome do Time</label>
+                            <input type="text" id="team-name" class="form-control" placeholder="Ex: Real Madrid CF, Flamengo" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="team-city">Cidade Sede</label>
+                            <input type="text" id="team-city" class="form-control" placeholder="Ex: Madrid, Rio de Janeiro" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="team-state">Estado / País Sede</label>
+                            <input type="text" id="team-state" class="form-control" placeholder="Ex: RJ, SP, Espanha" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="team-league">Associação à Liga</label>
+                            <select id="team-league" class="form-control" required>
+                                <option value="">Carregando ligas...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="team-stadium">Estádio Principal (Mando de Campo)</label>
+                            <select id="team-stadium" class="form-control" required>
+                                <option value="">Carregando estádios...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-team')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Time</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== MODAL: JOGADOR (CADASTRAR / EDITAR) ================== -->
+    <div id="modal-player" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-player-title" class="modal-title">Cadastrar Novo Jogador</h3>
+                <span class="modal-close" onclick="closeModal('modal-player')">&times;</span>
+            </div>
+            <form id="form-player">
+                <input type="hidden" id="player-id">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="player-name">Nome Completo do Jogador</label>
+                            <input type="text" id="player-name" class="form-control" placeholder="Ex: Lionel Messi, Neymar Jr." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="player-position">Posição de Atuação</label>
+                            <select id="player-position" class="form-control" required>
+                                <option value="GOALKEEPER">Goleiro (GOALKEEPER)</option>
+                                <option value="DEFENDER">Defensor (DEFENDER)</option>
+                                <option value="MIDFIELDER" selected>Meio-campista (MIDFIELDER)</option>
+                                <option value="FORWARD">Atacante (FORWARD)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="player-age">Idade do Jogador</label>
+                            <input type="number" id="player-age" class="form-control" placeholder="Ex: 25" min="15" max="50" required>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="player-team">Clube Atual (Time)</label>
+                            <select id="player-team" class="form-control" required>
+                                <option value="">Carregando times...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-player')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Jogador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== MODAL: ESTÁDIO (CADASTRAR / EDITAR) ================== -->
+    <div id="modal-stadium" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-stadium-title" class="modal-title">Cadastrar Novo Estádio</h3>
+                <span class="modal-close" onclick="closeModal('modal-stadium')">&times;</span>
+            </div>
+            <form id="form-stadium">
+                <input type="hidden" id="stadium-id">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="stadium-name">Nome do Estádio</label>
+                            <input type="text" id="stadium-name" class="form-control" placeholder="Ex: Maracanã, Santiago Bernabéu" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="stadium-capacity">Capacidade de Público</label>
+                            <input type="number" id="stadium-capacity" class="form-control" placeholder="Ex: 80000" min="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="stadium-city">Cidade</label>
+                            <input type="text" id="stadium-city" class="form-control" placeholder="Ex: Rio de Janeiro" required>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="stadium-type">Tipo de Gramado</label>
+                            <select id="stadium-type" class="form-control" required>
+                                <option value="Natural" selected>Natural</option>
+                                <option value="Sintético">Sintético</option>
+                                <option value="Híbrido">Híbrido</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-stadium')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Estádio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== MODAL: PARTIDA (AGENDAR / EDITAR) ================== -->
+    <div id="modal-match" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-match-title" class="modal-title">Agendar Nova Partida</h3>
+                <span class="modal-close" onclick="closeModal('modal-match')">&times;</span>
+            </div>
+            <form id="form-match">
+                <input type="hidden" id="match-id">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="match-home-team">Time Mandante</label>
+                            <select id="match-home-team" class="form-control" required>
+                                <option value="">Carregando times...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="match-away-team">Time Visitante</label>
+                            <select id="match-away-team" class="form-control" required>
+                                <option value="">Carregando times...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="match-home-goals">Gols do Mandante</label>
+                            <input type="number" id="match-home-goals" class="form-control" placeholder="Ex: 0" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="match-away-goals">Gols do Visitante</label>
+                            <input type="number" id="match-away-goals" class="form-control" placeholder="Ex: 0" min="0" value="0">
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="match-stadium">Estádio do Jogo</label>
+                            <select id="match-stadium" class="form-control" required>
+                                <option value="">Carregando estádios...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="match-date">Data & Horário do Jogo</label>
+                            <input type="datetime-local" id="match-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="match-status">Status da Partida</label>
+                            <select id="match-status" class="form-control" required>
+                                <option value="SCHEDULED" selected>Agendado (SCHEDULED)</option>
+                                <option value="LIVE">Ao Vivo (LIVE)</option>
+                                <option value="FINISHED">Finalizado (FINISHED)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-match')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Partida</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================== ALERTA DE RATE LIMIT EXCEDIDO ================== -->
+    <div id="rate-limit-overlay" class="rate-limit-overlay">
+        <div class="rate-limit-content">
+            <i class="fa-solid fa-triangle-exclamation rate-limit-icon"></i>
+            <h2 class="rate-limit-title">Limite de Taxa Excedido!</h2>
+            <p class="rate-limit-text">Você realizou mais do que o limite permitido de 15 requisições por minuto configurado na API. Para proteger o sistema, seu acesso foi suspenso temporariamente.</p>
+            <div>
+                <span class="rate-limit-timer" id="rate-limit-timer-val">00</span>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">segundos para reativação automática</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container de Toasts para Notificações Flutuantes -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts de Lógica JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
