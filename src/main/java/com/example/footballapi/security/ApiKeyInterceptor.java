@@ -19,13 +19,13 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
 
-        // Ignorar caminhos públicos de documentação, console H2 e geração de chaves
-        if (path.startsWith("/swagger-ui") || 
-            path.startsWith("/v3/api-docs") || 
-            path.startsWith("/h2-console") || 
-            path.startsWith("/api/keys") || 
-            path.equals("/favicon.ico") ||
-            path.equals("/")) {
+        // Ignorar caminhos que não pertencem aos endpoints de dados protegidos da API
+        // Isso permite carregar livremente recursos estáticos do frontend, Swagger, console H2, etc.
+        if (!path.startsWith("/league") &&
+            !path.startsWith("/match") &&
+            !path.startsWith("/player") &&
+            !path.startsWith("/stadium") &&
+            !path.startsWith("/team")) {
             return true;
         }
 

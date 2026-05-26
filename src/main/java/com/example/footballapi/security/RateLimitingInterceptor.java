@@ -36,12 +36,14 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
 
-        // Ignorar caminhos públicos de documentação, console H2
-        if (path.startsWith("/swagger-ui") || 
-            path.startsWith("/v3/api-docs") || 
-            path.startsWith("/h2-console") || 
-            path.equals("/favicon.ico") ||
-            path.equals("/")) {
+        // Ignorar caminhos que não correspondem aos endpoints de negócio e chaves da API
+        // Isso impede que carregamentos de CSS/JS/HTML consumam a cota de rate limit do usuário.
+        if (!path.startsWith("/league") &&
+            !path.startsWith("/match") &&
+            !path.startsWith("/player") &&
+            !path.startsWith("/stadium") &&
+            !path.startsWith("/team") &&
+            !path.startsWith("/api/keys")) {
             return true;
         }
 
